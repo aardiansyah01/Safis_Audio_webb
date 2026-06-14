@@ -28,7 +28,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        if (
+            $user->subscription_status === 'trial' &&
+            now()->lessThanOrEqualTo($user->trial_end)
+        ) {
+            return redirect('/dashboard');
+        }
+
+        if ($user->subscription_status === 'active') {
+            return redirect('/dashboard');
+        }
+
+        return redirect('/subscription');
     }
 
     /**

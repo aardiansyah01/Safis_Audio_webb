@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class CheckSubscription
@@ -15,17 +14,19 @@ class CheckSubscription
         $user = Auth::user();
 
         if (!$user) {
-            return redirect('/login');
+            return redirect('/');
         }
 
-        if ($user->subscription_status === 'active') {
+        // jika masih trial
+        if (
+            $user->subscription_status === 'trial' &&
+            now()->lessThanOrEqualTo($user->trial_end)
+        ) {
             return $next($request);
         }
 
-        if (
-            $user->subscription_status === 'trial' &&
-            $user->trial_end >= Carbon::now()
-        ) {
+        // jika sudah subscribe
+        if ($user->subscription_status === 'active') {
             return $next($request);
         }
 
