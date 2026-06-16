@@ -29,9 +29,18 @@
                         History
                     </x-nav-link>
 
-                    @if(Auth::user()->subscription_status === 'trial')
-                        <x-nav-link
-                            href="/subscription">
+                    @php
+                        $hasSubscription = Auth::user()
+                            ->subscriptions()
+                            ->where('status', 'active')
+                            ->exists();
+                    @endphp
+
+                    @if(
+                        Auth::user()->subscription_status === 'trial'
+                        && !$hasSubscription
+                    )
+                        <x-nav-link href="/subscription">
                             Subscription
                         </x-nav-link>
                     @endif
@@ -145,10 +154,15 @@
                 History
             </x-responsive-nav-link>
 
-            @if(Auth::user()->subscription_status === 'trial')
+            @if(
+                    Auth::user()->subscription_status === 'trial'
+                    && !$hasSubscription
+                )
                 <x-responsive-nav-link
-                    href="/subscription">
+                    :href="url('/subscription')">
+
                     Subscription
+
                 </x-responsive-nav-link>
             @endif
 

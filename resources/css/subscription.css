@@ -1,0 +1,146 @@
+:root {
+    --primary: #356dff;
+    --dark: #07122d;
+    --light: #f8fafc;
+}
+
+body {
+    background: #f7f9fc;
+    font-family: "Poppins", sans-serif;
+}
+
+/* HEADER */
+.subscription-header {
+    text-align: center;
+    padding-top: 10px;
+    margin-bottom: 70px;
+}
+
+.subscription-badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 30px;
+    background: #eef3ff;
+    color: var(--primary);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.subscription-title {
+    font-size: 64px;
+    font-weight: 700;
+    color: #07122d;
+}
+
+.subscription-subtitle {
+    font-size: 20px;
+    color: #64748b;
+    margin-top: 20px;
+}
+
+/* CARDS */
+
+.plan-card {
+    background: white;
+    border-radius: 28px;
+    padding: 45px;
+
+    height: 100%;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+
+    transition: 0.3s;
+}
+
+.plan-card:hover {
+    transform: translateY(-6px);
+}
+
+.plan-card.active {
+    border: 2px solid var(--primary);
+    position: relative;
+}
+
+.popular-badge {
+    position: absolute;
+
+    top: -18px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: var(--primary);
+    color: white;
+
+    padding: 8px 20px;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+}
+
+.plan-name {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.plan-price {
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+    color: #07122d;
+}
+
+.plan-duration {
+    color: #64748b;
+    font-size: 22px;
+}
+
+.plan-desc {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 35px;
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+}
+
+.plan-features li {
+    margin-bottom: 18px;
+    color: #475569;
+    font-size: 18px;
+}
+
+.plan-btn {
+    width: 100%;
+    border: none;
+    border-radius: 15px;
+
+    padding: 15px;
+
+    margin-top: 30px;
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-dark-plan {
+    background: #07122d;
+    color: white;
+}
+
+.btn-primary-plan {
+    background: linear-gradient(135deg, #4f6bff, #356dff);
+
+    color: white;
+}
+
+.bottom-note {
+    text-align: center;
+    margin-top: 40px;
+    color: #64748b;
+}

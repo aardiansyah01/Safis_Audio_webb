@@ -50,6 +50,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+
+            'trial_start' => 'datetime',
+            'trial_end' => 'datetime',
         ];
     }
 
@@ -61,5 +64,17 @@ class User extends Authenticatable
     public function audioProcesses()
     {
         return $this->hasMany(AudioProcess::class);
+    }
+
+    // helper trial
+    public function isTrial()
+    {
+        return $this->subscription_status === 'trial'
+            && now()->lessThanOrEqualTo($this->trial_end);
+    }
+
+    public function isSubscribed()
+    {
+        return $this->subscription_status === 'active';
     }
 }
