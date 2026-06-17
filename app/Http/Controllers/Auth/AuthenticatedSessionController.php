@@ -30,6 +30,22 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        $hasActiveSubscription = $user->subscriptions()
+            ->where('status', 'active')
+            ->exists();
+
+        if (
+            $user->subscription_status === 'trial'
+            && !$hasActiveSubscription
+        ) {
+
+            $request->session()->put(
+                'show_trial_popup',
+                true
+            );
+
+        }
+
         if (
             $user->subscription_status === 'trial' &&
             now()->lessThanOrEqualTo($user->trial_end)

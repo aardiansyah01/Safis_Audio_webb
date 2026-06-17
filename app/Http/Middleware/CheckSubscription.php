@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Subscription;
-use App\Models\User;
 
 class CheckSubscription
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(
+        Request $request,
+        Closure $next
+    ): Response
     {
-        /** @var User $user */
         $user = Auth::user();
 
         if (!$user) {
@@ -22,39 +23,56 @@ class CheckSubscription
 
         /*
         |--------------------------------------------------------------------------
-        | 1. Masih trial
+        | 1. Trial masih aktif
         |--------------------------------------------------------------------------
         */
+
         if (
-            $user->subscription_status === 'trial' &&
+            $user->trial_end &&
             now()->lessThanOrEqualTo($user->trial_end)
         ) {
+
+            if (
+                $user->subscription_status !== 'trial'
+            ) {
+
+                $user->update([
+                    'subscription_status' => 'trial'
+                ]);
+            }
+
             return $next($request);
         }
 
         /*
         |--------------------------------------------------------------------------
-        | 2. Trial habis → cek subscription
+        | 2. Cari subscription aktif terbaru
         |--------------------------------------------------------------------------
         */
-        if ($user->subscription_status === 'trial') {
 
-            $subscription = Subscription::where('user_id', $user->id)
-                ->where('status', 'active')
-                ->first();
+        $subscription = Subscription::where(
+            'user_id',
+            $user->id
+        )
+        ->where('status', 'active')
+        ->orderByDesc('end_date')
+        ->first();
 
-            if ($subscription) {
+        /*
+        |--------------------------------------------------------------------------
+        | 3. Tidak punya subscription aktif
+        |--------------------------------------------------------------------------
+        */
 
-                if (now()->greaterThanOrEqualTo($subscription->start_date)) {
+        if (!$subscription) {
 
-                    $user->update([
-                        'subscription_status' => 'active'
-                    ]);
+            if (
+                $user->subscription_status !== 'expired'
+            ) {
 
-                    return $next($request);
-                }
-
-                return redirect('/subscription');
+                $user->update([
+                    'subscription_status' => 'expired'
+                ]);
             }
 
             return redirect('/subscription');
@@ -62,45 +80,42 @@ class CheckSubscription
 
         /*
         |--------------------------------------------------------------------------
-        | 3. Sudah active
+        | 4. Subscription sudah habis
         |--------------------------------------------------------------------------
         */
-        if ($user->subscription_status === 'active') {
 
-            $subscription = Subscription::where('user_id', $user->id)
-                ->where('status', 'active')
-                ->first();
+        if (
+            now()->greaterThan(
+                $subscription->end_date
+            )
+        ) {
 
-            if (!$subscription) {
+            $subscription->update([
+                'status' => 'expired'
+            ]);
 
-                $user->update([
-                    'subscription_status' => 'expired'
-                ]);
+            $user->update([
+                'subscription_status' => 'expired'
+            ]);
 
-                return redirect('/subscription');
-            }
-
-            if (now()->greaterThan($subscription->end_date)) {
-
-                $subscription->update([
-                    'status' => 'expired'
-                ]);
-
-                $user->update([
-                    'subscription_status' => 'expired'
-                ]);
-
-                return redirect('/subscription');
-            }
-
-            return $next($request);
+            return redirect('/subscription');
         }
 
         /*
         |--------------------------------------------------------------------------
-        | 4. Expired
+        | 5. Subscription aktif
         |--------------------------------------------------------------------------
         */
-        return redirect('/subscription');
+
+        if (
+            $user->subscription_status !== 'active'
+        ) {
+
+            $user->update([
+                'subscription_status' => 'active'
+            ]);
+        }
+
+        return $next($request);
     }
 }

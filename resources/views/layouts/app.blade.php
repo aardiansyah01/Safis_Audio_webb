@@ -42,6 +42,125 @@
             <main>
                 {{ $slot }}
             </main>
+            @php
+
+                $showTrialPopup = false;
+
+                if (Auth::check()) {
+
+                    $activeSubscription = Auth::user()
+                        ->subscriptions()
+                        ->where('status', 'active')
+                        ->exists();
+
+                    $showTrialPopup =
+                        Auth::user()->subscription_status === 'trial'
+                        && !$activeSubscription
+                        && session('show_trial_popup');
+                }
+
+            @endphp
+
+            @if($showTrialPopup)
+
+                <div
+                    class="trial-modal-overlay"
+                    id="trialModal">
+
+                    <div class="trial-modal">
+
+                        <h2>
+                            Welcome to SafisAudio
+                        </h2>
+
+                        <p class="trial-desc">
+
+                            You are currently using our
+                            7-Day Free Trial.
+
+                        </p>
+
+                        <div class="trial-date">
+
+                            Trial Ends
+
+                            <strong>
+
+                                {{ \Carbon\Carbon::parse(
+                                    Auth::user()->trial_end
+                                )->format('d M Y') }}
+
+                            </strong>
+
+                        </div>
+
+                        <div class="trial-features">
+
+                            <div>✓ Unlimited Audio Processing</div>
+
+                            <div>✓ AI Noise Reduction</div>
+
+                            <div>✓ Audio Enhancement</div>
+
+                            <div>✓ Download Processed Files</div>
+
+                        </div>
+
+                        <p class="trial-note">
+
+                            After your trial expires,
+                            an active subscription will be required
+                            to continue using SafisAudio.
+
+                        </p>
+
+                        <div class="trial-buttons">
+
+                            <button
+                                class="trial-btn-secondary"
+                                onclick="closeTrialModal()">
+
+                                Continue Trial
+
+                            </button>
+
+                            <a
+                                href="/subscription"
+                                class="trial-btn-primary">
+
+                                View Plans
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <script>
+
+                function closeTrialModal() {
+
+                    document
+                        .getElementById('trialModal')
+                        .style.display = 'none';
+
+                    fetch('/hide-trial-popup', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN':
+                                document.querySelector(
+                                    'meta[name="csrf-token"]'
+                                ).content
+                        }
+                    });
+
+                }
+
+                </script>
+
+            @endif
         </div>
     </body>
 </html>

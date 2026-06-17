@@ -55,35 +55,101 @@
                 </li>
 
                 @php
-                    $hasSubscription = Auth::user()
-                        ->subscriptions()
+
+                    $user = Auth::user();
+
+                    $activeSubscription = $user->subscriptions()
                         ->where('status', 'active')
-                        ->exists();
+                        ->orderByDesc('end_date')
+                        ->first();
+
+                    $showSubscriptionMenu = false;
+
+                    if (
+                        $user->subscription_status === 'trial'
+                        && !$activeSubscription
+                    ) {
+
+                        $showSubscriptionMenu = true;
+
+                    }
+
+                    elseif (
+                        $user->subscription_status === 'expired'
+                    ) {
+
+                        $showSubscriptionMenu = true;
+
+                    }
+
+                    elseif ($activeSubscription) {
+
+                        $daysRemaining = now()
+                            ->diffInDays(
+                                $activeSubscription->end_date,
+                                false
+                            );
+
+                        if ($daysRemaining <= 7) {
+
+                            $showSubscriptionMenu = true;
+
+                        }
+
+                    }
+
                 @endphp
 
-                @if(
-                    Auth::user()->subscription_status === 'trial'
-                    && !$hasSubscription
-                )
+                @if($showSubscriptionMenu)
 
-                <li class="nav-item">
+                    <li class="nav-item">
 
-                    <a
-                        href="/subscription"
-                        class="nav-link dashboard-link">
+                        <a
+                            href="/subscription"
+                            class="nav-link dashboard-link">
 
-                        Subscription
+                            Subscription
 
-                    </a>
+                        </a>
 
-                </li>
+                    </li>
 
                 @endif
 
             </ul>
 
             {{-- User --}}
-            <div class="dropdown">
+            <div class="dropdown text-end">
+
+                <div class="subscription-info">
+
+                    @php
+
+                    $activeSubscription = Auth::user()
+                        ->subscriptions()
+                        ->where('status', 'active')
+                        ->orderByDesc('end_date')
+                        ->first();
+
+                    @endphp
+
+                    @if($activeSubscription)
+
+                        Active until
+                        {{ \Carbon\Carbon::parse(
+                            $activeSubscription->end_date
+                        )->format('M d, Y') }}
+
+                    @elseif(Auth::user()->subscription_status === 'trial')
+
+                        Trial until
+                        {{ \Carbon\Carbon::parse(
+                            Auth::user()->trial_end
+                        )->format('M d, Y') }}
+
+                    @endif
+
+                </div>
 
                 <button
                     class="profile-button dropdown-toggle"

@@ -101,4 +101,19 @@ Route::get('/test-midtrans', function () {
     return $snapToken;
 });
 
+Route::post(
+    '/hide-trial-popup',
+    function () {
+
+        session()->forget(
+            'show_trial_popup'
+        );
+
+        return response()->json([
+            'success' => true
+        ]);
+
+    }
+)->middleware('auth');
+
 require __DIR__.'/auth.php';
