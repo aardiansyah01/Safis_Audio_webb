@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\AudioProcessingController;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -16,10 +17,30 @@ Route::middleware([
     'subscription'
 ])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get(
+        '/dashboard',
+        [AudioProcessingController::class, 'index']
+    )->name('dashboard');
 
+    Route::post(
+        '/audio/upload',
+        [AudioProcessingController::class, 'upload']
+    )->name('audio.upload');
+
+    Route::post(
+        '/audio/process/{id}',
+        [AudioProcessingController::class, 'process']
+    )->name('audio.process');
+
+    Route::get(
+        '/audio/download/{id}',
+        [AudioProcessingController::class, 'download']
+    )->name('audio.download');
+    
+    Route::post(
+        '/audio/reprocess/{id}',
+        [AudioProcessingController::class, 'reprocess']
+    )->name('audio.reprocess');
 });
 
 Route::middleware([
@@ -41,6 +62,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
     ->name('subscription.subscribe');
 });
+
+// Route::get(
+//     '/audio-processing',
+//     [AudioProcessingController::class, 'index']
+// )->name('audio.processing');
 
 Route::middleware('auth')->group(function () {
 
@@ -74,24 +100,5 @@ Route::get('/test-midtrans', function () {
 
     return $snapToken;
 });
-
-// Route::get('/cek-config', function () {
-//     return [
-//         'server_key' => config('services.midtrans.server_key'),
-//         'client_key' => config('services.midtrans.client_key'),
-//         'production' => config('services.midtrans.is_production'),
-//     ];
-// });
-
-Route::get('/audio-processing', function () {
-    return "Audio Processing Page";
-})->middleware(['auth', 'subscription']);
-
-// Route::get('/cek-env', function () {
-//     return [
-//         'server_key' => env('MIDTRANS_SERVER_KEY'),
-//         'client_key' => env('MIDTRANS_CLIENT_KEY'),
-//     ];
-// });
 
 require __DIR__.'/auth.php';

@@ -1,0 +1,99 @@
+.dashboard-navbar {
+    background: rgba(2, 8, 23, 0.75);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    min-height: 88px;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 999;
+}
+
+/* logo */
+
+.dashboard-logo {
+    color: #7cb8ff !important;
+
+    font-size: 1.85rem;
+
+    font-weight: 700;
+
+    font-family: "Poppins", sans-serif;
+}
+
+/* menu */
+
+.dashboard-menu {
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-left: auto;
+
+    margin-right: 40px;
+}
+
+.dashboard-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+
+    font-size: 1rem;
+
+    font-weight: 500;
+
+    margin: 0 14px;
+
+    transition: 0.3s;
+}
+
+.dashboard-link:hover {
+    color: white !important;
+}
+
+.dashboard-link.active {
+    color: #7cb8ff !important;
+}
+
+/* user button */
+
+.profile-button {
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    color: white;
+
+    padding: 14px 26px;
+
+    border-radius: 18px;
+
+    transition: 0.3s;
+}
+
+.profile-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* dropdown */
+
+.dropdown-menu {
+    border: none;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+    padding: 12px 18px;
+}
