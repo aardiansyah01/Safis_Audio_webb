@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AudioProcessingController;
+use App\Http\Controllers\HistoryController;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -48,9 +49,20 @@ Route::middleware([
     'subscription'
 ])->group(function () {
 
-    Route::get('/history', function () {
-        return view('history');
-    })->name('history');
+    Route::get(
+        '/history',
+        [HistoryController::class, 'index']
+    )->name('history');
+
+    Route::get(
+        '/history/edit/{id}',
+        [HistoryController::class, 'edit']
+    )->name('history.edit');
+
+    Route::delete(
+        '/history/delete/{id}',
+        [HistoryController::class, 'destroy']
+    )->name('history.delete');
 
 });
 
@@ -62,11 +74,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/subscription/subscribe', [SubscriptionController::class, 'subscribe'])
     ->name('subscription.subscribe');
 });
-
-// Route::get(
-//     '/audio-processing',
-//     [AudioProcessingController::class, 'index']
-// )->name('audio.processing');
 
 Route::middleware('auth')->group(function () {
 

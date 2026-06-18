@@ -21,12 +21,6 @@ class CheckSubscription
             return redirect('/');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 1. Trial masih aktif
-        |--------------------------------------------------------------------------
-        */
-
         if (
             $user->trial_end &&
             now()->lessThanOrEqualTo($user->trial_end)
@@ -44,12 +38,6 @@ class CheckSubscription
             return $next($request);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 2. Cari subscription aktif terbaru
-        |--------------------------------------------------------------------------
-        */
-
         $subscription = Subscription::where(
             'user_id',
             $user->id
@@ -57,12 +45,6 @@ class CheckSubscription
         ->where('status', 'active')
         ->orderByDesc('end_date')
         ->first();
-
-        /*
-        |--------------------------------------------------------------------------
-        | 3. Tidak punya subscription aktif
-        |--------------------------------------------------------------------------
-        */
 
         if (!$subscription) {
 
@@ -77,12 +59,6 @@ class CheckSubscription
 
             return redirect('/subscription');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | 4. Subscription sudah habis
-        |--------------------------------------------------------------------------
-        */
 
         if (
             now()->greaterThan(
@@ -100,12 +76,6 @@ class CheckSubscription
 
             return redirect('/subscription');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | 5. Subscription aktif
-        |--------------------------------------------------------------------------
-        */
 
         if (
             $user->subscription_status !== 'active'

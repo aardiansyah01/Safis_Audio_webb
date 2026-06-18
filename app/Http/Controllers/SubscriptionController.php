@@ -53,12 +53,6 @@ class SubscriptionController extends Controller
         ->orderByDesc('end_date')
         ->first();
 
-        /*
-        |--------------------------------------------------------------------------
-        | CEK APAKAH MASIH AKTIF
-        |--------------------------------------------------------------------------
-        */
-
         if ($activeSubscription) {
 
             $daysRemaining = now()
@@ -83,13 +77,6 @@ class SubscriptionController extends Controller
 
         } else {
 
-            /*
-            |--------------------------------------------------------------------------
-            | Jika masih trial aktif,
-            | subscription dimulai setelah trial berakhir
-            |--------------------------------------------------------------------------
-            */
-
             if (
                 $user->trial_end &&
                 now()->lessThanOrEqualTo($user->trial_end)
@@ -107,12 +94,6 @@ class SubscriptionController extends Controller
             }
 
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | BUAT SUBSCRIPTION BARU
-        |--------------------------------------------------------------------------
-        */
 
         if ($plan === '1month') {
 

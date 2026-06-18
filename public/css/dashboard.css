@@ -85,6 +85,11 @@
     margin-bottom: 10px;
 }
 
+.upload-btn:hover {
+    color: #fff;
+    background-color: #2563ff;
+}
+
 .modern-slider {
     cursor: pointer;
 }

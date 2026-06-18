@@ -10,14 +10,28 @@ use Illuminate\Support\Facades\Http;
 
 class AudioProcessingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $latestFile = AudioProcess::where(
-            'user_id',
-            Auth::id()
-        )
-        ->latest()
-        ->first();
+        if ($request->has('history')) {
+
+            $latestFile = AudioProcess::where(
+                'user_id',
+                Auth::id()
+            )
+            ->findOrFail(
+                $request->history
+            );
+
+        } else {
+
+            $latestFile = AudioProcess::where(
+                'user_id',
+                Auth::id()
+            )
+            ->latest()
+            ->first();
+
+        }
 
         return view(
             'dashboard.index',

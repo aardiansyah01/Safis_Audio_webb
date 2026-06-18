@@ -1,0 +1,79 @@
+.history-page {
+    padding: 60px 0;
+    min-height: 100vh;
+    background: #f5f6f9;
+}
+
+.history-title {
+    font-size: 56px;
+    font-weight: 800;
+    color: #061238;
+}
+
+.history-subtitle {
+    color: #6c757d;
+}
+
+.history-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 25px 30px;
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.history-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.history-icon {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 28px;
+
+    border-radius: 18px;
+
+    background: #eef4ff;
+}
+
+.history-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.empty-history {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+/* history delete model */
+.modal-content {
+    border-radius: 24px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.modal-footer {
+    border-top: 1px solid #f1f1f1;
+}
+
+.modal-title {
+    font-weight: 700;
+    color: #061238;
+}
